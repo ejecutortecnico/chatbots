@@ -1,31 +1,29 @@
-# Instalar las bibliotecas necesarias:
-# pip install transformers torch
+import csv
 
-from transformers import pipeline
+respuestas = {}
 
-# Crear el pipeline de generación de texto usando DialoGPT
-chatbot = pipeline("text-generation", model="microsoft/DialoGPT-small")
+with open("datoschat.csv", "r") as archivo:
+    lector = csv.DictReader(archivo)
+    for filas in lector:
+        respuestas[filas["pregunta"]] = filas["respuesta"]
 
-def iniciar_chat():
-    print("¡Hola! Soy un chatbot avanzado. Escribe 'adiós' para salir.")
-    chat_historia = ""  # Inicializar historial de conversación
+# Función para obtener la respuesta
+def obtener_respuesta(mensaje):
+    mensaje = mensaje.lower()
+    if mensaje in respuestas:
+        return respuestas[mensaje]
+    else:
+        with open("datoschat.csv", "a", newline="") as archivo:
+            escritor = csv.writer(archivo)
+            escritor.writerow([mensaje, "Pregunta por responder"])  # Escribir encabezados
+        return "Lo siento, no entiendo esa pregunta."
 
-    while True:
-        entrada = input("Tú: ")
-        if entrada.lower() in ['adiós', 'chau', 'nos vemos']:
-            print("ChatBot: ¡Adiós! Cuídate.")
-            break
-
-        # Concatenar la entrada del usuario al historial de la conversación
-        chat_historia += f"Usuario: {entrada}\nChatBot:"
-        respuesta = chatbot(chat_historia, max_length=100, pad_token_id=50256)
-
-        # Obtener y mostrar la respuesta generada
-        respuesta_texto = respuesta[0]["generated_text"][len(chat_historia):]
-        print("ChatBot:", respuesta_texto.strip())
-
-        # Actualizar el historial de conversación con la respuesta del bot
-        chat_historia += respuesta_texto + "\n"
-
-# Ejecutar el chatbot
-iniciar_chat()
+# Bucle de conversación
+print("¡Hola! Soy un chatbot. Escribe 'salir' para terminar la conversación.")
+while True:
+    usuario = input("Tú: ")
+    if usuario.lower() == "salir":
+        print("Chatbot: ¡Adiós!")
+        break
+    respuesta = obtener_respuesta(usuario)
+    print("Chatbot:", respuesta)
