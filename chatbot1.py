@@ -3,7 +3,7 @@ respuestas = {
         "buenos días": "¡Buenos días! Espero que tengas un excelente día.",
         "adiós": "Adiós, ¡espero verte pronto!",
         "bye": "Adiós, ¡cuídate mucho!",
-        "tu nombre": "Soy un chatbot creado en Python. Aún no tengo nombre 😅",
+        "tu nombre": "Soy un chatbot creado en Python. Aún no tengo nombre",
         "clima": "No tengo acceso a información en tiempo real, pero podrías consultar el pronóstico en línea."
     }
 
